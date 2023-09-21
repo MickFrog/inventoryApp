@@ -13,6 +13,13 @@ exports.items_list = asyncHandler(async function (req, res, next) {
 });
 
 // Display detail of an item
-exports.item_detail = asyncHandler(function (req, res, next) {
-  res.send("NOT IMPLEMENTED: This is a detail page for a chosen item");
+exports.item_detail = asyncHandler(async function (req, res, next) {
+  const item = await Item.findById(req.params.id).populate("category").exec();
+
+  if (!item) {
+    const err = new Error("Item not found");
+    err.status = 404;
+    return next(err);
+  }
+  res.render("item_detail", { title: item.name, item: item });
 });

@@ -28,7 +28,7 @@ exports.category_list = asyncHandler(async function (req, res, next) {
 // Display detail of a category
 exports.category_detail = asyncHandler(async function (req, res, next) {
   // Get category with given id
-  const category = await Category.findById(req.params.id);
+  const category = await Category.findById(req.params.id).exec();
 
   if (!category) {
     const err = new Error("Category not found");
