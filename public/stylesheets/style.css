@@ -17,3 +17,8 @@ a {
 .container {
   padding-top: 50px;
 }
+
+.items-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
