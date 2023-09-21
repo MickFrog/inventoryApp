@@ -13,3 +13,7 @@ a {
   display: flex;
   gap: 4rem;
 }
+
+.container {
+  padding-top: 50px;
+}
