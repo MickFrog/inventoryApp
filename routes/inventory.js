@@ -14,14 +14,14 @@ router.get("/", categoryController.index);
 router.get("/categories", categoryController.category_list);
 
 // Get request for one category
-router.get("/categories", categoryController.category_list);
+router.get("/categories/:id", categoryController.category_detail);
 
 /// ITEMS ROUTES ///
 
 // Get request for items list
 router.get("/items", itemsController.items_list);
 
-// Get request for one category
-router.get("/categories", itemsController.item_detail);
+// Get request for one item
+router.get("/items/:id", itemsController.item_detail);
 
 module.exports = router;

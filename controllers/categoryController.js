@@ -26,6 +26,15 @@ exports.category_list = asyncHandler(async function (req, res, next) {
 });
 
 // Display detail of a category
-exports.category_detail = asyncHandler(function (req, res, next) {
-  res.send("NOT IMPLEMENTED: This is a detail page for a chosen category");
+exports.category_detail = asyncHandler(async function (req, res, next) {
+  // Get category with given id
+  const category = await Category.findById(req.params.id);
+
+  if (!category) {
+    const err = new Error("Category not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_detail", { title: category.name, category: category });
 });
