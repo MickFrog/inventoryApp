@@ -3,6 +3,19 @@
 
 <div class="container">
     <h4><%= category.description %></h4>
+    <hr>
+    <div class="category-items">
+        <% categoryItems.forEach((item) => { %>
+            <div>
+                <p><a href=<%= item.url %>><%= item.name %></a></p>
+                <p><%= item.description %></p>
+                <p>Category: <a href=<%= item.category.url %>><%= item.category.name %></a></p>
+                <p>$<%= item.price %></p>
+                <p style="color:green"><%= item.numberInStock %> items in stock</p>
+                <hr>
+            </div>
+        <% }) %>
+    </div>
 </div>
 
 

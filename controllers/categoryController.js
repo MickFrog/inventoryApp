@@ -28,7 +28,10 @@ exports.category_list = asyncHandler(async function (req, res, next) {
 // Display detail of a category
 exports.category_detail = asyncHandler(async function (req, res, next) {
   // Get category with given id
-  const category = await Category.findById(req.params.id).exec();
+  const [category, categoryItems] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Item.find({ category: req.params.id }),
+  ]);
 
   if (!category) {
     const err = new Error("Category not found");
@@ -36,5 +39,9 @@ exports.category_detail = asyncHandler(async function (req, res, next) {
     return next(err);
   }
 
-  res.render("category_detail", { title: category.name, category: category });
+  res.render("category_detail", {
+    title: category.name,
+    category: category,
+    categoryItems,
+  });
 });
