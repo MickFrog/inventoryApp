@@ -16,7 +16,7 @@ exports.index = asyncHandler(async function (req, res, next) {
   });
 });
 
-// Display list of all categories
+// Get list of all categories
 exports.category_list = asyncHandler(async function (req, res, next) {
   const categories = await Category.find({}).sort({ name: 1 }).exec();
   res.render("categories_list", {
@@ -25,7 +25,7 @@ exports.category_list = asyncHandler(async function (req, res, next) {
   });
 });
 
-// Display detail of a category
+// Get detail of a category
 exports.category_detail = asyncHandler(async function (req, res, next) {
   // Get category with given id
   const [category, categoryItems] = await Promise.all([
@@ -44,4 +44,9 @@ exports.category_detail = asyncHandler(async function (req, res, next) {
     category: category,
     categoryItems,
   });
+});
+
+// Get create page for category
+exports.category_create = asyncHandler(function (req, res, next) {
+  res.render("category_create", { title: "Create Category" });
 });

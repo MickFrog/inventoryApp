@@ -13,6 +13,9 @@ router.get("/", categoryController.index);
 // Get request for category list
 router.get("/categories", categoryController.category_list);
 
+// Get request for category create
+router.get("/categories/create", categoryController.category_create);
+
 // Get request for one category
 router.get("/categories/:id", categoryController.category_detail);
 
