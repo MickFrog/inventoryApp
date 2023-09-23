@@ -1,0 +1,50 @@
+<%- include('./partials/header') %>
+
+
+<div class="container">
+  <% if(locals.errors !== undefined) { %>
+    <% errors.forEach(err => {  %>
+      <p style="color: red;"><%= err.msg %></p>
+    <% }) %>
+  <% } %>
+
+  <form action="#" method="post">
+    <div>
+        <label for="item-name">Item name:</label>
+        <input type="text" id="item-name" minlength="3" name="itemName" required>
+    </div>
+    <br>
+    <div>
+        <label for="item-desc">Item description:</label>
+        <textarea type="text" id="item-desc" minlength="3" maxlength="100" name="categoryDesc" required></textarea>
+    </div>
+    <br>
+    <div>
+        <label for="item-category">Item Category:</label>
+        <select name="itemCategory" id="item-category" required>
+            <% categories.forEach(category => { %>
+                <% if (locals.item) { %>
+                    <option selected=<% item.category._id.toString()===category._id.toString() ? true : false %> value=<%= category._id %>><%= category.name %></option>
+                <% } else { %>
+                    <option value=<%= category._id %>><%= category.name %></option>
+                <% } %>
+            <% }) %>
+        </select>
+    </div>
+    <br>
+    <div>
+        <label for="item-price">Item price:</label>
+        <input type="number" id="item-price" min="1" name="itemPrice" required>
+    </div>
+    <br>
+    <div>
+        <label for="item-stock">Item Number in stock:</label>
+        <input type="number" id="item-stock" min="0" name="itemPrice" required>
+    </div>
+    <br>
+    <button type="submit">Add New Item</button>
+  </form>
+</div>
+
+
+<%- include('./partials/footer') %>
