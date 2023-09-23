@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
 const Item = require("../models/Item");
 const Category = require("../models/Category");
@@ -33,6 +34,61 @@ exports.item_create_get = asyncHandler(async function (req, res, next) {
 });
 
 // Post request handler for item create request
-exports.item_create_post = asyncHandler(function (req, res, next) {
-  res.redirect("/inventory/items");
-});
+exports.item_create_post = [
+  // Convert the category to an array.
+  (req, res, next) => {
+    if (!Array.isArray(req.body.itemCategory)) {
+      req.body.itemCategory =
+        typeof req.body.itemCategory === "undefined"
+          ? []
+          : [req.body.itemCategory];
+    }
+    next();
+  },
+  // Validate and sanitize fields
+  body("itemName", "Item name must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("itemDesc", "Description must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("itemPrice", "Price must be a number greater or equal to 1")
+    .isInt({ min: 1 })
+    .trim()
+    .escape(),
+  body("itemStock", "Item stock must be a number greater or equal to 1")
+    .isInt({ min: 1 })
+    .trim()
+    .escape(),
+  body("itemCategory.*").escape(),
+
+  asyncHandler(async function (req, res, next) {
+    const errors = validationResult(req); // extract validation errors
+
+    const newItem = new Item({
+      name: req.body.itemName,
+      description: req.body.itemDesc,
+      category: req.body.itemCategory,
+      price: req.body.itemPrice,
+      numberInStock: req.body.itemStock,
+    });
+
+    if (!errors.isEmpty()) {
+      // Render create item form with errors
+      const categories = await Category.find({}).exec();
+
+      // Re render create item form
+      res.render("item_create", {
+        title: "Create Item",
+        item: newItem,
+        categories: categories,
+        errors: errors.array(),
+      });
+    } else {
+      await newItem.save();
+      res.redirect("/inventory/items");
+    }
+  }),
+];
