@@ -2,16 +2,24 @@
 
 
 <div class="container">
+  <% if(locals.errors !== undefined) { %>
+    <% errors.forEach(err => {  %>
+      <p style="color: red;"><%= err.msg %></p>
+    <% }) %>
+  <% } %>
+
   <form action="#" method="post">
     <div>
         <label for="category-name">Name:</label>
-        <input type="text" id="category-name" minlength="3" name="categoryName">
+        <input type="text" id="category-name" minlength="3" name="categoryName" required>
     </div>
     <br>
     <div>
         <label for="category-desc">Description:</label>
-        <textarea type="text" id="category-desc" minlength="3" name="categoryDesc"></textarea>
+        <textarea type="text" id="category-desc" minlength="3" maxlength="100" name="categoryDesc" required></textarea>
     </div>
+    <br>
+    <button type="submit">Add New Category</button>
   </form>
 </div>
 

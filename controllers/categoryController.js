@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
 const Category = require("../models/Category");
 const Item = require("../models/Item");
@@ -47,6 +48,42 @@ exports.category_detail = asyncHandler(async function (req, res, next) {
 });
 
 // Get create page for category
-exports.category_create = asyncHandler(function (req, res, next) {
+exports.category_create_get = asyncHandler(function (req, res, next) {
   res.render("category_create", { title: "Create Category" });
 });
+
+// Post request handler for category create
+exports.category_create_post = [
+  // Validate and sanitize user fields
+  // Validation is done synchronously to prevent later validation that may come with asynchronous behavior
+  body("categoryName", "Category name must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("categoryDesc", "Category description must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  asyncHandler(async function (req, res, next) {
+    const errors = validationResult(req);
+
+    // Render create form if any validation errors occurred,
+    if (!errors.isEmpty()) {
+      res.render("category_create", {
+        title: "Create Category",
+        errors: errors.array(),
+      });
+      return;
+    }
+
+    // Add new category
+    const newCategory = new Category({
+      name: req.body.categoryName,
+      description: req.body.categoryDesc,
+    });
+
+    await newCategory.save();
+    res.redirect("/inventory/categories");
+  }),
+];
