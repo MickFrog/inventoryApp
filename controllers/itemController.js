@@ -158,3 +158,34 @@ exports.item_update_post = [
     }
   }),
 ];
+
+exports.item_delete_get = asyncHandler(async function (req, res, next) {
+  // Get item to be deleted
+  const item = await Item.findById(req.params.id).exec();
+
+  if (!item) {
+    const error = new Error("Item not found");
+    res.status = 404;
+    next(error);
+  }
+
+  res.render("item_delete", {
+    title: `${item.name} delete`,
+    itemLink: item.url,
+  });
+});
+
+exports.item_delete_post = asyncHandler(async function (req, res, next) {
+  // Get item to be deleted
+  const item = await Item.findById(req.params.id).exec();
+
+  if (!item) {
+    const error = new Error("Item not found");
+    res.status = 404;
+    next(error);
+  }
+
+  // finally delete the item
+  await Item.findByIdAndDelete(req.params.id);
+  res.redirect("/inventory/items");
+});

@@ -51,6 +51,12 @@ router.get("/items/:id/update", itemsController.item_update_get);
 // Post request for item update
 router.post("/items/:id/update", itemsController.item_update_post);
 
+// Get request for item delete
+router.get("/items/:id/delete", itemsController.item_delete_get);
+
+// Post request for item delete
+router.post("/items/:id/delete", itemsController.item_delete_post);
+
 // Get request for one item
 router.get("/items/:id", itemsController.item_detail);
 

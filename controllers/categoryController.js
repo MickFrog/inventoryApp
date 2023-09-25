@@ -150,7 +150,7 @@ exports.category_delete_get = asyncHandler(async function (req, res, next) {
   // Get category to be deleted
   const [category, categoryItems] = await Promise.all([
     Category.findById(req.params.id).exec(),
-    Item.find({ category: req.params.id }),
+    Item.find({ category: req.params.id }).exec(),
   ]);
 
   if (!category) {
