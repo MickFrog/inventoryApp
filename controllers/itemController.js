@@ -35,16 +35,6 @@ exports.item_create_get = asyncHandler(async function (req, res, next) {
 
 // Post request handler for item create request
 exports.item_create_post = [
-  // Convert the category to an array.
-  (req, res, next) => {
-    if (!Array.isArray(req.body.itemCategory)) {
-      req.body.itemCategory =
-        typeof req.body.itemCategory === "undefined"
-          ? []
-          : [req.body.itemCategory];
-    }
-    next();
-  },
   // Validate and sanitize fields
   body("itemName", "Item name must be filled")
     .trim()
@@ -89,6 +79,82 @@ exports.item_create_post = [
     } else {
       await newItem.save();
       res.redirect("/inventory/items");
+    }
+  }),
+];
+
+// GET request handler for item update
+exports.item_update_get = asyncHandler(async function (req, res, next) {
+  // Get item associated with ID
+  const [item, categories] = await Promise.all([
+    Item.findById(req.params.id).populate("category").exec(),
+    Category.find({}).exec(),
+  ]);
+
+  if (!item) {
+    const error = new Error("Item not found");
+    res.status = 404;
+    next(error);
+  }
+
+  res.render("item_update", {
+    title: `${item.name} update`,
+    item: item,
+    categories,
+  });
+});
+
+// Post request handler for item update
+exports.item_update_post = [
+  // Validate and sanitize fields
+  body("itemName", "Item name must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("itemDesc", "Description must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("itemPrice", "Price must be a number greater or equal to 1")
+    .isInt({ min: 1 })
+    .trim()
+    .escape(),
+  body("itemStock", "Item stock must be a number greater or equal to 1")
+    .isInt({ min: 1 })
+    .trim()
+    .escape(),
+  body("itemCategory.*").escape(),
+
+  asyncHandler(async function (req, res, next) {
+    const errors = validationResult(req); // extract validation errors
+
+    const newItem = new Item({
+      _id: req.params.id, // This is required, or a new ID will be assigned!
+      name: req.body.itemName,
+      description: req.body.itemDesc,
+      category: req.body.itemCategory[0],
+      price: req.body.itemPrice,
+      numberInStock: req.body.itemStock,
+    });
+
+    if (!errors.isEmpty()) {
+      // Render create item form with errors
+      const categories = await Category.find({}).exec();
+
+      // Re render create item form
+      res.render("item_create", {
+        title: "Create Item",
+        item: newItem,
+        categories: categories,
+        errors: errors.array(),
+      });
+    } else {
+      const updatedItem = await Item.findByIdAndUpdate(
+        req.params.id,
+        newItem,
+        {}
+      );
+      res.redirect(updatedItem.url);
     }
   }),
 ];

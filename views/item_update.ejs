@@ -11,7 +11,7 @@
   <form action="#" method="post">
     <div>
         <label for="item-name">Item name:</label>
-        <input type="text" value="<%= locals.item===undefined ? '' : item.name %>" id="item-name" minlength="3" name="itemName" required>
+        <input type="text" value=<%= locals.item===undefined ? '' : item.name %> id="item-name" minlength="3" name="itemName" required>
     </div>
     <br>
     <div>
@@ -42,7 +42,7 @@
         <input type="number" value=<%= locals.item===undefined ? '' : item.numberInStock %> id="item-stock" min="1" name="itemStock" required>
     </div>
     <br>
-    <button type="submit">Add New Item</button>
+    <button type="submit">Update Item</button>
   </form>
 </div>
 

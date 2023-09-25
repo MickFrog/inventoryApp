@@ -30,8 +30,14 @@ router.get("/items", itemsController.items_list);
 // Get request for item create
 router.get("/items/create", itemsController.item_create_get);
 
-// Get request for item create
+// Post request for item create
 router.post("/items/create", itemsController.item_create_post);
+
+// Get request for item update
+router.get("/items/:id/update", itemsController.item_update_get);
+
+// Post request for item update
+router.post("/items/:id/update", itemsController.item_update_post);
 
 // Get request for one item
 router.get("/items/:id", itemsController.item_detail);
