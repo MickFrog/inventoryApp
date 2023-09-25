@@ -3,6 +3,8 @@
 
 <div class="container">
     <h4><%= category.description %></h4>
+    <a href='<%= `${category.url}/update` %>'><button>Update category</button></a>
+    <a href='<%= `${category.url}/delete` %>'><button>Delete category</button></a>
     <hr>
     <div class="category-items">
         <% categoryItems.forEach((item) => { %>
@@ -16,7 +18,6 @@
             </div>
         <% }) %>
     </div>
-    <a href='<%= `${category.url}/update` %>'><button>Update Item</button></a>
 </div>
 
 

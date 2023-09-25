@@ -1,0 +1,21 @@
+<%- include('./partials/header') %>
+
+
+<div class="container">
+    <% if(locals.categoryItems!==undefined) { %>
+        <h3>Delete these items first before removing the category.</h3>
+        <% categoryItems.forEach(item => { %>
+            <a href='<%= item.url %>'><%= item.name %></a>
+            <br>
+        <% }) %>
+    <% } else { %>
+        <form action="#" method="post">
+            <h2><strong>Are you sure you want to delete this category?</strong></h2>
+            <a href="<%= locals.categoryLink %>"><button type="button">No</button></a>
+            <button type="submit">Yes</button>
+        </form>
+    <% } %>
+</div>
+
+
+<%- include('./partials/footer') %>
