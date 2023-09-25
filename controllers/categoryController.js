@@ -87,3 +87,61 @@ exports.category_create_post = [
     res.redirect("/inventory/categories");
   }),
 ];
+
+// GET request handler for category update
+exports.category_update_get = asyncHandler(async function (req, res, next) {
+  // Get category associated with ID
+  const category = await Category.findById(req.params.id).exec();
+
+  if (!category) {
+    const error = new Error("Category not found");
+    res.status = 404;
+    next(error);
+  }
+
+  res.render("category_update", {
+    title: `${category.name} update`,
+    category: category,
+  });
+});
+
+// Post request handler for category update
+exports.category_update_post = [
+  // Validate and sanitize user fields
+  // Validation is done synchronously to prevent later validation that may come with asynchronous behavior
+  body("categoryName", "Category name must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("categoryDesc", "Category description must be filled")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  asyncHandler(async function (req, res, next) {
+    const errors = validationResult(req);
+
+    // Render create form if any validation errors occurred,
+    if (!errors.isEmpty()) {
+      res.render("category_create", {
+        title: "Create Category",
+        errors: errors.array(),
+      });
+      return;
+    }
+
+    // Add new category
+    const newCategory = new Category({
+      name: req.body.categoryName,
+      description: req.body.categoryDesc,
+      _id: req.params.id, // Required or else id will be reassigned
+    });
+
+    const updatedCategory = await Category.findByIdAndUpdate(
+      req.params.id,
+      newCategory,
+      {}
+    );
+    res.redirect(updatedCategory.url);
+  }),
+];

@@ -19,6 +19,12 @@ router.get("/categories/create", categoryController.category_create_get);
 // Post request for category create
 router.post("/categories/create", categoryController.category_create_post);
 
+// Get request for category update
+router.get("/categories/:id/update", categoryController.category_update_get);
+
+// Post request for category update
+router.post("/categories/:id/update", categoryController.category_update_post);
+
 // Get request for one category
 router.get("/categories/:id", categoryController.category_detail);
 
